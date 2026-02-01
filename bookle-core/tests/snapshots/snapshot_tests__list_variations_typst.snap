@@ -1,0 +1,41 @@
+---
+source: bookle-core/tests/snapshot_tests.rs
+expression: typst_source
+---
+#set page(
+  width: 210mm,
+  height: 297mm,
+  margin: (
+    top: 2.5cm,
+    bottom: 2.5cm,
+    left: 2cm,
+    right: 2cm,
+  ),
+)
+
+#set text(size: 11pt)
+#set heading(numbering: "1.1")
+
+#align(center)[
+  #v(30%)
+  #text(size: 24pt, weight: "bold")[List Test]
+  #v(1em)
+]
+
+#pagebreak()
+
+#outline(title: "Contents", depth: 2)
+
+#pagebreak()
+
+= Lists
+
+- Unordered 1
+- Unordered 2
+
+1. Ordered 1
+2. Ordered 2
+3. Ordered 3
+
+
+#pagebreak()
