@@ -1,0 +1,339 @@
+---
+source: bookle-core/tests/snapshot_tests.rs
+expression: json
+---
+{
+  "id": "12345678-1234-1234-1234-123456789abc",
+  "metadata": {
+    "title": "The Art of Testing",
+    "creator": [
+      "Jane Doe",
+      "John Smith"
+    ],
+    "subject": [
+      "Testing",
+      "Software"
+    ],
+    "description": "A comprehensive guide to software testing.",
+    "publisher": "Test Press",
+    "date": null,
+    "language": "en",
+    "identifier": "test-book-identifier-12345",
+    "cover_resource_key": null,
+    "series": null,
+    "reading_direction": "LeftToRight",
+    "rights": null
+  },
+  "chapters": [
+    {
+      "title": "Introduction",
+      "id": null,
+      "content": [
+        {
+          "type": "header",
+          "value": {
+            "level": 2,
+            "content": [
+              {
+                "type": "text",
+                "value": "Welcome"
+              }
+            ],
+            "anchor": "welcome"
+          }
+        },
+        {
+          "type": "paragraph",
+          "value": [
+            {
+              "type": "text",
+              "value": "This is a "
+            },
+            {
+              "type": "bold",
+              "value": [
+                {
+                  "type": "text",
+                  "value": "comprehensive"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "value": " guide to testing with "
+            },
+            {
+              "type": "italic",
+              "value": [
+                {
+                  "type": "text",
+                  "value": "real examples"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "value": "."
+            }
+          ]
+        },
+        {
+          "type": "list",
+          "value": {
+            "items": [
+              [
+                {
+                  "type": "paragraph",
+                  "value": [
+                    {
+                      "type": "text",
+                      "value": "First item"
+                    }
+                  ]
+                }
+              ],
+              [
+                {
+                  "type": "paragraph",
+                  "value": [
+                    {
+                      "type": "text",
+                      "value": "Second item"
+                    }
+                  ]
+                }
+              ],
+              [
+                {
+                  "type": "paragraph",
+                  "value": [
+                    {
+                      "type": "text",
+                      "value": "Third item with "
+                    },
+                    {
+                      "type": "code",
+                      "value": "inline code"
+                    }
+                  ]
+                }
+              ]
+            ],
+            "ordered": false
+          }
+        }
+      ]
+    },
+    {
+      "title": "Advanced Topics",
+      "id": null,
+      "content": [
+        {
+          "type": "paragraph",
+          "value": [
+            {
+              "type": "text",
+              "value": "Let's explore some advanced concepts."
+            }
+          ]
+        },
+        {
+          "type": "code_block",
+          "value": {
+            "lang": "rust",
+            "code": "fn main() {\n    println!(\"Hello, world!\");\n}"
+          }
+        },
+        {
+          "type": "blockquote",
+          "value": [
+            {
+              "type": "paragraph",
+              "value": [
+                {
+                  "type": "text",
+                  "value": "Testing is the key to quality software."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "thematic_break"
+        },
+        {
+          "type": "paragraph",
+          "value": [
+            {
+              "type": "text",
+              "value": "Visit our "
+            },
+            {
+              "type": "link",
+              "value": {
+                "children": [
+                  {
+                    "type": "text",
+                    "value": "website"
+                  }
+                ],
+                "url": "https://example.com"
+              }
+            },
+            {
+              "type": "text",
+              "value": " for more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Tables and Special Formatting",
+      "id": null,
+      "content": [
+        {
+          "type": "table",
+          "value": {
+            "headers": [
+              {
+                "content": [
+                  {
+                    "type": "text",
+                    "value": "Feature"
+                  }
+                ],
+                "colspan": 1,
+                "rowspan": 1
+              },
+              {
+                "content": [
+                  {
+                    "type": "text",
+                    "value": "Status"
+                  }
+                ],
+                "colspan": 1,
+                "rowspan": 1
+              }
+            ],
+            "rows": [
+              [
+                {
+                  "content": [
+                    {
+                      "type": "text",
+                      "value": "Unit Tests"
+                    }
+                  ],
+                  "colspan": 1,
+                  "rowspan": 1
+                },
+                {
+                  "content": [
+                    {
+                      "type": "bold",
+                      "value": [
+                        {
+                          "type": "text",
+                          "value": "Complete"
+                        }
+                      ]
+                    }
+                  ],
+                  "colspan": 1,
+                  "rowspan": 1
+                }
+              ],
+              [
+                {
+                  "content": [
+                    {
+                      "type": "text",
+                      "value": "Integration Tests"
+                    }
+                  ],
+                  "colspan": 1,
+                  "rowspan": 1
+                },
+                {
+                  "content": [
+                    {
+                      "type": "italic",
+                      "value": [
+                        {
+                          "type": "text",
+                          "value": "In Progress"
+                        }
+                      ]
+                    }
+                  ],
+                  "colspan": 1,
+                  "rowspan": 1
+                }
+              ]
+            ]
+          }
+        },
+        {
+          "type": "paragraph",
+          "value": [
+            {
+              "type": "text",
+              "value": "Water formula: H"
+            },
+            {
+              "type": "subscript",
+              "value": [
+                {
+                  "type": "text",
+                  "value": "2"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "value": "O"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "value": [
+            {
+              "type": "text",
+              "value": "E = mc"
+            },
+            {
+              "type": "superscript",
+              "value": [
+                {
+                  "type": "text",
+                  "value": "2"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "value": [
+            {
+              "type": "strikethrough",
+              "value": [
+                {
+                  "type": "text",
+                  "value": "Deprecated feature"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "resources": {
+    "resources": {}
+  },
+  "toc": []
+}

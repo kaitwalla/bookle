@@ -1,0 +1,63 @@
+[package]
+name = "bookle-core"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+uuid = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+chrono = { workspace = true }
+thiserror = { workspace = true }
+async-trait = { workspace = true }
+tokio = { workspace = true }
+
+# Storage abstraction
+opendal = "0.45"
+
+# Parallel processing
+rayon = "1"
+
+# EPUB handling
+epub = "2"
+epub-builder = "0.7"
+
+# HTML parsing and sanitization
+scraper = "0.18"
+html5ever = "0.27"
+ego-tree = "0.6"
+
+# Base64 encoding for resources
+base64 = "0.22"
+
+# SHA-256 hashing for content-addressed storage
+sha2 = "0.10"
+hex = "0.4"
+
+# Markdown parsing
+pulldown-cmark = "0.10"
+
+# PDF parsing
+pdf-extract = "0.7"
+
+# MOBI/AZW parsing
+mobi = "0.8"
+
+# KEPUB processing
+regex = "1"
+zip = "0.6"
+
+# Note: Typst source output is generated directly, no dependencies needed
+# Users can compile .typ files to PDF using: typst compile input.typ output.pdf
+
+[dev-dependencies]
+insta = { version = "1", features = ["json"] }
+proptest = "1"
+criterion = "0.5"
+tempfile = "3"
+
+[[bench]]
+name = "conversion"
+harness = false

@@ -1,0 +1,30 @@
+[workspace]
+resolver = "2"
+members = [
+    "bookle-core",
+    "bookle-server",
+    "bookle-cli",
+    "bookle-desktop/src-tauri",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+repository = "https://github.com/your-org/bookle"
+
+[workspace.dependencies]
+# Shared dependencies across workspace
+uuid = { version = "1", features = ["v4", "serde"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+chrono = { version = "0.4", features = ["serde"] }
+thiserror = "1"
+anyhow = "1"
+tokio = { version = "1", features = ["full"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+async-trait = "0.1"
+
+# Core library
+bookle-core = { path = "bookle-core" }
