@@ -35,20 +35,12 @@ pub trait StorageProvider: Send + Sync {
     }
 
     /// Generate a presigned URL for reading (if supported)
-    async fn presigned_read_url(
-        &self,
-        _path: &str,
-        _expires: Duration,
-    ) -> StorageResult<String> {
+    async fn presigned_read_url(&self, _path: &str, _expires: Duration) -> StorageResult<String> {
         Err(StorageError::PresignedUrlNotSupported)
     }
 
     /// Generate a presigned URL for writing (if supported)
-    async fn presigned_write_url(
-        &self,
-        _path: &str,
-        _expires: Duration,
-    ) -> StorageResult<String> {
+    async fn presigned_write_url(&self, _path: &str, _expires: Duration) -> StorageResult<String> {
         Err(StorageError::PresignedUrlNotSupported)
     }
 }
@@ -135,9 +127,9 @@ impl StorageProvider for LocalStorage {
 
     async fn exists(&self, path: &str) -> StorageResult<bool> {
         let full_path = self.full_path(path)?;
-        Ok(tokio::fs::try_exists(full_path)
+        tokio::fs::try_exists(full_path)
             .await
-            .unwrap_or(false))
+            .map_err(|e| StorageError::BackendError(e.to_string()))
     }
 
     async fn size(&self, path: &str) -> StorageResult<u64> {

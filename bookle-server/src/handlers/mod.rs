@@ -1,6 +1,7 @@
 //! Request handlers
 
 mod library;
+pub mod opds;
 mod sync;
 
 pub use library::*;

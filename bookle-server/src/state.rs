@@ -85,8 +85,8 @@ impl AppState {
     /// Create new application state
     pub async fn new() -> Result<Self> {
         // Default to local storage in current directory
-        let storage_path = std::env::var("BOOKLE_STORAGE_PATH")
-            .unwrap_or_else(|_| "./bookle_data".to_string());
+        let storage_path =
+            std::env::var("BOOKLE_STORAGE_PATH").unwrap_or_else(|_| "./bookle_data".to_string());
         let storage_path = PathBuf::from(storage_path);
 
         // Create storage directories
@@ -146,7 +146,10 @@ impl AppState {
         if !format.chars().all(|c| c.is_ascii_alphanumeric()) || format.is_empty() {
             anyhow::bail!("Invalid format");
         }
-        Ok(self.storage_path.join("cache").join(format!("{}.{}", id, format)))
+        Ok(self
+            .storage_path
+            .join("cache")
+            .join(format!("{}.{}", id, format)))
     }
 
     /// Save the library index

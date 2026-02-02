@@ -14,8 +14,12 @@ async fn create_test_state() -> (AppState, TempDir) {
     let storage_path = temp_dir.path().to_path_buf();
 
     // Create storage directories
-    tokio::fs::create_dir_all(storage_path.join("books")).await.unwrap();
-    tokio::fs::create_dir_all(storage_path.join("cache")).await.unwrap();
+    tokio::fs::create_dir_all(storage_path.join("books"))
+        .await
+        .unwrap();
+    tokio::fs::create_dir_all(storage_path.join("cache"))
+        .await
+        .unwrap();
 
     let storage = Arc::new(bookle_core::storage::LocalStorage::new(&storage_path));
     let (event_tx, _) = broadcast::channel(100);
