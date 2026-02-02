@@ -85,7 +85,10 @@ pub async fn list_books(
             if let Some(ref search) = query.search {
                 let search_lower = search.to_lowercase();
                 entry.title.to_lowercase().contains(&search_lower)
-                    || entry.authors.iter().any(|a| a.to_lowercase().contains(&search_lower))
+                    || entry
+                        .authors
+                        .iter()
+                        .any(|a| a.to_lowercase().contains(&search_lower))
             } else {
                 true
             }
@@ -101,7 +104,11 @@ pub async fn list_books(
     // Paginate (sanitize page to prevent underflow)
     let page = sanitize_page(query.page);
     let start = ((page - 1) * query.per_page) as usize;
-    let books: Vec<BookSummary> = books.into_iter().skip(start).take(query.per_page as usize).collect();
+    let books: Vec<BookSummary> = books
+        .into_iter()
+        .skip(start)
+        .take(query.per_page as usize)
+        .collect();
 
     Json(ListBooksResponse {
         books,
@@ -142,8 +149,8 @@ pub async fn get_book(
         .await
         .map_err(|_| StatusCode::NOT_FOUND)?;
 
-    let book: Book = serde_json::from_str(&book_data)
-        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+    let book: Book =
+        serde_json::from_str(&book_data).map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
 
     let chapters: Vec<ChapterSummary> = book
         .chapters
@@ -198,8 +205,12 @@ pub async fn upload_book(
                 .ok_or_else(|| (StatusCode::BAD_REQUEST, "Unknown file type".to_string()))?;
 
             // Get decoder
-            let decoder = decoder_for_extension(extension)
-                .ok_or_else(|| (StatusCode::BAD_REQUEST, format!("Unsupported format: {}", extension)))?;
+            let decoder = decoder_for_extension(extension).ok_or_else(|| {
+                (
+                    StatusCode::BAD_REQUEST,
+                    format!("Unsupported format: {}", extension),
+                )
+            })?;
 
             // Read file data
             let data = field
@@ -214,7 +225,12 @@ pub async fn upload_book(
                 decoder.decode(&mut cursor)
             })
             .await
-            .map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, format!("Task failed: {}", e)))?
+            .map_err(|e| {
+                (
+                    StatusCode::INTERNAL_SERVER_ERROR,
+                    format!("Task failed: {}", e),
+                )
+            })?
             .map_err(|e| (StatusCode::BAD_REQUEST, format!("Failed to decode: {}", e)))?;
 
             let id = book.id.to_string();
@@ -223,7 +239,8 @@ pub async fn upload_book(
             // Save book IR to storage
             let book_json = serde_json::to_string_pretty(&book)
                 .map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))?;
-            let book_path = state.book_path(&id)
+            let book_path = state
+                .book_path(&id)
                 .map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))?;
             tokio::fs::write(&book_path, book_json)
                 .await
@@ -355,7 +372,9 @@ pub async fn download_book(
     };
 
     // Get paths (validates ID format)
-    let cache_path = state.cache_path(&id, format).map_err(|_| StatusCode::BAD_REQUEST)?;
+    let cache_path = state
+        .cache_path(&id, format)
+        .map_err(|_| StatusCode::BAD_REQUEST)?;
     let book_path = state.book_path(&id).map_err(|_| StatusCode::BAD_REQUEST)?;
 
     // Check cache first (using async try_exists)
@@ -364,16 +383,27 @@ pub async fn download_book(
             .await
             .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
 
+        // Load book metadata for consistent filename
+        let book_data = tokio::fs::read_to_string(&book_path)
+            .await
+            .map_err(|_| StatusCode::NOT_FOUND)?;
+        let book: Book =
+            serde_json::from_str(&book_data).map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+
         let content_type = match format {
             "epub" => "application/epub+zip",
             "typ" => "text/x-typst",
             _ => "application/octet-stream",
         };
+        let filename = format!("{}.{}", sanitize_filename(&book.metadata.title, 50), format);
 
         return Ok(Response::builder()
             .status(StatusCode::OK)
             .header(header::CONTENT_TYPE, content_type)
-            .header(header::CONTENT_DISPOSITION, format!("attachment; filename=\"book.{}\"", format))
+            .header(
+                header::CONTENT_DISPOSITION,
+                format!("attachment; filename=\"{}\"", filename),
+            )
             .body(data.into())
             .unwrap());
     }
@@ -383,12 +413,11 @@ pub async fn download_book(
         .await
         .map_err(|_| StatusCode::NOT_FOUND)?;
 
-    let book: Book = serde_json::from_str(&book_data)
-        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+    let book: Book =
+        serde_json::from_str(&book_data).map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
 
     // Get encoder
-    let encoder = encoder_for_format(format)
-        .ok_or(StatusCode::BAD_REQUEST)?;
+    let encoder = encoder_for_format(format).ok_or(StatusCode::BAD_REQUEST)?;
 
     // Encode book in a blocking task (CPU-intensive operation)
     let output = tokio::task::spawn_blocking(move || {
@@ -413,8 +442,8 @@ pub async fn download_book(
     let book_data = tokio::fs::read_to_string(&book_path)
         .await
         .map_err(|_| StatusCode::NOT_FOUND)?;
-    let book: Book = serde_json::from_str(&book_data)
-        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+    let book: Book =
+        serde_json::from_str(&book_data).map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
 
     let content_type = match format {
         "epub" => "application/epub+zip",
@@ -431,7 +460,10 @@ pub async fn download_book(
     Ok(Response::builder()
         .status(StatusCode::OK)
         .header(header::CONTENT_TYPE, content_type)
-        .header(header::CONTENT_DISPOSITION, format!("attachment; filename=\"{}\"", filename))
+        .header(
+            header::CONTENT_DISPOSITION,
+            format!("attachment; filename=\"{}\"", filename),
+        )
         .body(output.into())
         .unwrap())
 }
