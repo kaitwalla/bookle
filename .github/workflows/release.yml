@@ -17,16 +17,12 @@ jobs:
         include:
           - target: x86_64-unknown-linux-gnu
             os: ubuntu-latest
-            artifact: bookle
           - target: x86_64-apple-darwin
             os: macos-latest
-            artifact: bookle
           - target: aarch64-apple-darwin
             os: macos-latest
-            artifact: bookle
           - target: x86_64-pc-windows-msvc
             os: windows-latest
-            artifact: bookle.exe
 
     steps:
       - uses: actions/checkout@v4
@@ -42,12 +38,12 @@ jobs:
       - name: Rename artifact (Unix)
         if: runner.os != 'Windows'
         run: |
-          cp target/${{ matrix.target }}/release/bookle bookle-${{ matrix.target }}
+          cp target/${{ matrix.target }}/release/bookle-cli bookle-${{ matrix.target }}
 
       - name: Rename artifact (Windows)
         if: runner.os == 'Windows'
         run: |
-          copy target\${{ matrix.target }}\release\bookle.exe bookle-${{ matrix.target }}.exe
+          copy target\${{ matrix.target }}\release\bookle-cli.exe bookle-${{ matrix.target }}.exe
 
       - name: Upload to Release
         uses: softprops/action-gh-release@v2
