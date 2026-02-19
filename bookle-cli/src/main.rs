@@ -8,7 +8,9 @@ use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
 /// Parse and validate jobs argument (must be at least 1)
 fn parse_jobs(s: &str) -> Result<usize, String> {
-    let n: usize = s.parse().map_err(|_| format!("'{}' is not a valid number", s))?;
+    let n: usize = s
+        .parse()
+        .map_err(|_| format!("'{}' is not a valid number", s))?;
     if n < 1 {
         Err("jobs must be at least 1".to_string())
     } else {

@@ -1,0 +1,17 @@
+---
+source: bookle-core/tests/conversion_tests.rs
+expression: snapshot
+---
+{
+  "title": "Around the World in 28 Languages",
+  "creator": [
+    "Infogrid Pacific"
+  ],
+  "subject": [],
+  "description": null,
+  "publisher": "Infogrid Pacific",
+  "language": "en",
+  "cover_resource_key": null,
+  "reading_direction": "LeftToRight",
+  "rights": null
+}

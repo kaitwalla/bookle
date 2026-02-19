@@ -1,0 +1,19 @@
+---
+source: bookle-core/tests/conversion_tests.rs
+expression: snapshot
+---
+{
+  "title": "Alice's Adventures in Wonderland",
+  "creator": [
+    "Lewis Carroll"
+  ],
+  "subject": [
+    "fiction"
+  ],
+  "description": null,
+  "publisher": "D. Appleton and Co",
+  "language": "en",
+  "cover_resource_key": "cover",
+  "reading_direction": "LeftToRight",
+  "rights": "Public Domain"
+}

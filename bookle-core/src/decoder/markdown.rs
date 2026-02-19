@@ -138,10 +138,18 @@ impl MarkdownDecoder {
             Tag::Emphasis => self.process_emphasis(events, start, state),
             Tag::Strong => self.process_strong(events, start, state),
             Tag::Strikethrough => self.process_strikethrough(events, start, state),
-            Tag::Link { dest_url, .. } => self.process_link(events, start, dest_url.to_string(), state),
-            Tag::Image { dest_url, title, .. } => {
-                self.process_image(events, start, dest_url.to_string(), title.to_string(), state)
+            Tag::Link { dest_url, .. } => {
+                self.process_link(events, start, dest_url.to_string(), state)
             }
+            Tag::Image {
+                dest_url, title, ..
+            } => self.process_image(
+                events,
+                start,
+                dest_url.to_string(),
+                title.to_string(),
+                state,
+            ),
             Tag::FootnoteDefinition(label) => {
                 self.process_footnote_def(events, start, label.to_string(), state)
             }
@@ -365,7 +373,9 @@ impl MarkdownDecoder {
         self.process_events(&events[start + 1..end], state)?;
 
         if !state.current_row.is_empty() {
-            state.table_rows.push(std::mem::take(&mut state.current_row));
+            state
+                .table_rows
+                .push(std::mem::take(&mut state.current_row));
         }
 
         Ok(end + 1)
@@ -511,7 +521,10 @@ impl MarkdownDecoder {
     /// Extract title from content (first H1)
     fn extract_title(blocks: &[Block]) -> Option<String> {
         for block in blocks {
-            if let Block::Header { level: 1, content, .. } = block {
+            if let Block::Header {
+                level: 1, content, ..
+            } = block
+            {
                 return Some(inlines_to_text(content));
             }
         }
@@ -525,10 +538,15 @@ impl MarkdownDecoder {
         let mut current_title: Option<String> = None;
 
         for block in blocks {
-            if let Block::Header { level: 1, content, .. } = &block {
+            if let Block::Header {
+                level: 1, content, ..
+            } = &block
+            {
                 // Save previous chapter if exists
                 if !current_blocks.is_empty() || current_title.is_some() {
-                    let title = current_title.take().unwrap_or_else(|| "Untitled".to_string());
+                    let title = current_title
+                        .take()
+                        .unwrap_or_else(|| "Untitled".to_string());
                     chapters.push(Chapter::new(title).with_content(current_blocks));
                     current_blocks = Vec::new();
                 }
@@ -639,7 +657,9 @@ fn inlines_to_text(inlines: &[Inline]) -> String {
             }
             Inline::Link { children, .. } => inlines_to_text(children),
             Inline::Code(s) => s.clone(),
-            Inline::Superscript(children) | Inline::Subscript(children) => inlines_to_text(children),
+            Inline::Superscript(children) | Inline::Subscript(children) => {
+                inlines_to_text(children)
+            }
             Inline::FootnoteRef { id } => format!("[{}]", id),
             Inline::Ruby { base, .. } => base.clone(),
             Inline::Break => " ".to_string(),
@@ -725,9 +745,9 @@ mod tests {
         let blocks = decoder.parse_markdown(markdown).unwrap();
 
         if let Block::Paragraph(inlines) = &blocks[0] {
-            let has_link = inlines.iter().any(|i| {
-                matches!(i, Inline::Link { url, .. } if url == "https://example.com")
-            });
+            let has_link = inlines
+                .iter()
+                .any(|i| matches!(i, Inline::Link { url, .. } if url == "https://example.com"));
             assert!(has_link);
         } else {
             panic!("Expected paragraph");

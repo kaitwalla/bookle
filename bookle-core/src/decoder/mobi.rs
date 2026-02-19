@@ -282,7 +282,9 @@ impl MobiDecoder {
 
             if is_chapter_heading {
                 if !current_blocks.is_empty() || current_title.is_some() {
-                    let title = current_title.take().unwrap_or_else(|| "Untitled".to_string());
+                    let title = current_title
+                        .take()
+                        .unwrap_or_else(|| "Untitled".to_string());
                     chapters.push(Chapter::new(title).with_content(current_blocks));
                     current_blocks = Vec::new();
                 }
@@ -361,7 +363,10 @@ impl super::Decoder for MobiDecoder {
     }
 
     fn supported_mime_types(&self) -> &[&str] {
-        &["application/x-mobipocket-ebook", "application/vnd.amazon.ebook"]
+        &[
+            "application/x-mobipocket-ebook",
+            "application/vnd.amazon.ebook",
+        ]
     }
 }
 
@@ -376,7 +381,9 @@ fn inlines_to_text(inlines: &[Inline]) -> String {
             }
             Inline::Link { children, .. } => inlines_to_text(children),
             Inline::Code(s) => s.clone(),
-            Inline::Superscript(children) | Inline::Subscript(children) => inlines_to_text(children),
+            Inline::Superscript(children) | Inline::Subscript(children) => {
+                inlines_to_text(children)
+            }
             Inline::FootnoteRef { id } => format!("[{}]", id),
             Inline::Ruby { base, .. } => base.clone(),
             Inline::Break => " ".to_string(),

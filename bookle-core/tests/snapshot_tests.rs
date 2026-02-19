@@ -37,8 +37,12 @@ fn sample_book() -> Book {
         ]),
         Block::List {
             items: vec![
-                vec![Block::Paragraph(vec![Inline::Text("First item".to_string())])],
-                vec![Block::Paragraph(vec![Inline::Text("Second item".to_string())])],
+                vec![Block::Paragraph(vec![Inline::Text(
+                    "First item".to_string(),
+                )])],
+                vec![Block::Paragraph(vec![Inline::Text(
+                    "Second item".to_string(),
+                )])],
                 vec![Block::Paragraph(vec![
                     Inline::Text("Third item with ".to_string()),
                     Inline::Code("inline code".to_string()),
@@ -52,16 +56,16 @@ fn sample_book() -> Book {
     // Chapter 2: Advanced Topics
     let mut chapter2 = Chapter::new("Advanced Topics");
     chapter2.content = vec![
-        Block::Paragraph(vec![
-            Inline::Text("Let's explore some advanced concepts.".to_string()),
-        ]),
+        Block::Paragraph(vec![Inline::Text(
+            "Let's explore some advanced concepts.".to_string(),
+        )]),
         Block::CodeBlock {
             lang: Some("rust".to_string()),
             code: "fn main() {\n    println!(\"Hello, world!\");\n}".to_string(),
         },
-        Block::Blockquote(vec![Block::Paragraph(vec![
-            Inline::Text("Testing is the key to quality software.".to_string()),
-        ])]),
+        Block::Blockquote(vec![Block::Paragraph(vec![Inline::Text(
+            "Testing is the key to quality software.".to_string(),
+        )])]),
         Block::ThematicBreak,
         Block::Paragraph(vec![
             Inline::Text("Visit our ".to_string()),
@@ -85,11 +89,15 @@ fn sample_book() -> Book {
             rows: vec![
                 vec![
                     TableCell::new(vec![Inline::Text("Unit Tests".to_string())]),
-                    TableCell::new(vec![Inline::Bold(vec![Inline::Text("Complete".to_string())])]),
+                    TableCell::new(vec![Inline::Bold(vec![Inline::Text(
+                        "Complete".to_string(),
+                    )])]),
                 ],
                 vec![
                     TableCell::new(vec![Inline::Text("Integration Tests".to_string())]),
-                    TableCell::new(vec![Inline::Italic(vec![Inline::Text("In Progress".to_string())])]),
+                    TableCell::new(vec![Inline::Italic(vec![Inline::Text(
+                        "In Progress".to_string(),
+                    )])]),
                 ],
             ],
         }),
@@ -102,9 +110,9 @@ fn sample_book() -> Book {
             Inline::Text("E = mc".to_string()),
             Inline::Superscript(vec![Inline::Text("2".to_string())]),
         ]),
-        Block::Paragraph(vec![
-            Inline::Strikethrough(vec![Inline::Text("Deprecated feature".to_string())]),
-        ]),
+        Block::Paragraph(vec![Inline::Strikethrough(vec![Inline::Text(
+            "Deprecated feature".to_string(),
+        )])]),
     ];
     book.add_chapter(chapter3);
 
@@ -228,16 +236,26 @@ fn test_list_variations() {
     chapter.content = vec![
         Block::List {
             items: vec![
-                vec![Block::Paragraph(vec![Inline::Text("Unordered 1".to_string())])],
-                vec![Block::Paragraph(vec![Inline::Text("Unordered 2".to_string())])],
+                vec![Block::Paragraph(vec![Inline::Text(
+                    "Unordered 1".to_string(),
+                )])],
+                vec![Block::Paragraph(vec![Inline::Text(
+                    "Unordered 2".to_string(),
+                )])],
             ],
             ordered: false,
         },
         Block::List {
             items: vec![
-                vec![Block::Paragraph(vec![Inline::Text("Ordered 1".to_string())])],
-                vec![Block::Paragraph(vec![Inline::Text("Ordered 2".to_string())])],
-                vec![Block::Paragraph(vec![Inline::Text("Ordered 3".to_string())])],
+                vec![Block::Paragraph(vec![Inline::Text(
+                    "Ordered 1".to_string(),
+                )])],
+                vec![Block::Paragraph(vec![Inline::Text(
+                    "Ordered 2".to_string(),
+                )])],
+                vec![Block::Paragraph(vec![Inline::Text(
+                    "Ordered 3".to_string(),
+                )])],
             ],
             ordered: true,
         },

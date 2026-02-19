@@ -1,0 +1,17 @@
+---
+source: bookle-core/tests/conversion_tests.rs
+expression: snapshot
+---
+{
+  "title": "The Geography of Bliss: One Grump's Search for the Happiest Places in the World",
+  "creator": [
+    "Eric Weiner"
+  ],
+  "subject": [],
+  "description": null,
+  "publisher": "Twelve",
+  "language": "en",
+  "cover_resource_key": null,
+  "reading_direction": "LeftToRight",
+  "rights": null
+}

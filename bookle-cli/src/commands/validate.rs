@@ -21,8 +21,8 @@ pub fn validate(input: &str, _strict: bool) -> Result<()> {
         .with_context(|| format!("No decoder available for .{} files", ext))?;
 
     // Try to read and decode
-    let file = File::open(input_path)
-        .with_context(|| format!("Failed to open input file: {}", input))?;
+    let file =
+        File::open(input_path).with_context(|| format!("Failed to open input file: {}", input))?;
     let mut reader = BufReader::new(file);
 
     match decoder.decode(&mut reader) {

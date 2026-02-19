@@ -29,12 +29,10 @@ impl ResourceData {
         match self {
             ResourceData::Inline(data) => Ok(data.clone()),
             ResourceData::TempFile { path } => std::fs::read(path),
-            ResourceData::External { .. } => {
-                Err(std::io::Error::new(
-                    std::io::ErrorKind::Unsupported,
-                    "Cannot read external resource synchronously",
-                ))
-            }
+            ResourceData::External { .. } => Err(std::io::Error::new(
+                std::io::ErrorKind::Unsupported,
+                "Cannot read external resource synchronously",
+            )),
         }
     }
 }
@@ -84,7 +82,7 @@ impl ResourceStore {
 
     /// Add a resource, returning its content-addressed key (SHA-256 hash)
     pub fn add(&mut self, resource: Resource) -> String {
-        use sha2::{Sha256, Digest};
+        use sha2::{Digest, Sha256};
 
         // For inline data, compute SHA-256 hash
         // For other storage types, use a UUID

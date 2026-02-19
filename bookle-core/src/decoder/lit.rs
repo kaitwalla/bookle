@@ -37,13 +37,13 @@ impl LitDecoder {
     fn validate_signature(&self, data: &[u8]) -> Result<(), ParseError> {
         if data.len() < LIT_SIGNATURE.len() {
             return Err(ParseError::MalformedContent(
-                "File too small to be a valid LIT file".to_string()
+                "File too small to be a valid LIT file".to_string(),
             ));
         }
 
         if &data[..LIT_SIGNATURE.len()] != LIT_SIGNATURE {
             return Err(ParseError::UnsupportedFormat(
-                "Invalid LIT file signature".to_string()
+                "Invalid LIT file signature".to_string(),
             ));
         }
 
@@ -55,10 +55,8 @@ impl LitDecoder {
     fn extract_metadata(&self, data: &[u8]) -> Metadata {
         // LIT files store some metadata that can be extracted without full parsing
         // For now, return default metadata with a note about the format
-        let mut metadata = Metadata::new(
-            "Unknown Title (LIT Format)".to_string(),
-            "en".to_string()
-        );
+        let mut metadata =
+            Metadata::new("Unknown Title (LIT Format)".to_string(), "en".to_string());
 
         // Try to find title in the data (LIT stores it as UTF-16LE in some cases)
         if let Some(title) = self.try_extract_title(data) {
@@ -67,7 +65,8 @@ impl LitDecoder {
 
         metadata.description = Some(
             "Imported from Microsoft Reader LIT format. For best results, \
-             consider converting to EPUB using Calibre.".to_string()
+             consider converting to EPUB using Calibre."
+                .to_string(),
         );
 
         metadata
@@ -119,8 +118,13 @@ impl LitDecoder {
             if chars.len() >= min_len && chars.len() <= max_len {
                 let s: String = chars.iter().collect();
                 // Filter out things that don't look like titles
-                if !s.contains("http") && !s.contains("\\") && !s.contains("/")
-                   && !s.chars().all(|c| c.is_ascii_uppercase() || c.is_whitespace()) {
+                if !s.contains("http")
+                    && !s.contains("\\")
+                    && !s.contains("/")
+                    && !s
+                        .chars()
+                        .all(|c| c.is_ascii_uppercase() || c.is_whitespace())
+                {
                     return Some(s);
                 }
             }
@@ -141,17 +145,19 @@ impl LitDecoder {
             },
             Block::Paragraph(vec![
                 Inline::Text(
-                    "This book was imported from Microsoft Reader's LIT format. ".to_string()
+                    "This book was imported from Microsoft Reader's LIT format. ".to_string(),
                 ),
                 Inline::Text(
                     "Due to the proprietary nature of the LIT format, full content extraction \
-                     is limited.".to_string()
+                     is limited."
+                        .to_string(),
                 ),
             ]),
             Block::Paragraph(vec![
                 Inline::Bold(vec![Inline::Text("Recommendation: ".to_string())]),
                 Inline::Text(
-                    "For complete book content, please convert this LIT file to EPUB using:".to_string()
+                    "For complete book content, please convert this LIT file to EPUB using:"
+                        .to_string(),
                 ),
             ]),
             Block::List {
@@ -167,11 +173,10 @@ impl LitDecoder {
                     ])],
                 ],
             },
-            Block::Paragraph(vec![
-                Inline::Text(
-                    "After conversion to EPUB, you can re-import the book for full functionality.".to_string()
-                ),
-            ]),
+            Block::Paragraph(vec![Inline::Text(
+                "After conversion to EPUB, you can re-import the book for full functionality."
+                    .to_string(),
+            )]),
         ];
 
         Chapter::new("LIT Format Information")
@@ -190,7 +195,8 @@ impl super::Decoder for LitDecoder {
     fn decode(&self, reader: &mut dyn Read) -> Result<Book, ParseError> {
         // Read all data
         let mut data = Vec::new();
-        reader.read_to_end(&mut data)
+        reader
+            .read_to_end(&mut data)
             .map_err(|e| ParseError::MalformedContent(format!("Failed to read LIT file: {}", e)))?;
 
         // Validate the LIT signature
@@ -278,9 +284,8 @@ mod tests {
 
         // "Hello World" in UTF-16LE
         let data: Vec<u8> = vec![
-            0x48, 0x00, 0x65, 0x00, 0x6C, 0x00, 0x6C, 0x00, 0x6F, 0x00,
-            0x20, 0x00, 0x57, 0x00, 0x6F, 0x00, 0x72, 0x00, 0x6C, 0x00,
-            0x64, 0x00,
+            0x48, 0x00, 0x65, 0x00, 0x6C, 0x00, 0x6C, 0x00, 0x6F, 0x00, 0x20, 0x00, 0x57, 0x00,
+            0x6F, 0x00, 0x72, 0x00, 0x6C, 0x00, 0x64, 0x00,
         ];
 
         let result = decoder.find_utf16le_string(&data, 5, 50);

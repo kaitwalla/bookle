@@ -91,10 +91,17 @@ impl EpubEncoder {
                     .as_ref()
                     .map(|l| format!(" class=\"language-{}\"", l))
                     .unwrap_or_default();
-                format!("<pre><code{}>{}</code></pre>\n", class_attr, escape_html(code))
+                format!(
+                    "<pre><code{}>{}</code></pre>\n",
+                    class_attr,
+                    escape_html(code)
+                )
             }
             Block::Blockquote(blocks) => {
-                format!("<blockquote>{}</blockquote>\n", self.blocks_to_xhtml(blocks))
+                format!(
+                    "<blockquote>{}</blockquote>\n",
+                    self.blocks_to_xhtml(blocks)
+                )
             }
             Block::ThematicBreak => "<hr/>\n".to_string(),
             Block::Table(table) => {
@@ -102,7 +109,10 @@ impl EpubEncoder {
                 if !table.headers.is_empty() {
                     html.push_str("<thead><tr>");
                     for cell in &table.headers {
-                        html.push_str(&format!("<th>{}</th>", self.inlines_to_xhtml(&cell.content)));
+                        html.push_str(&format!(
+                            "<th>{}</th>",
+                            self.inlines_to_xhtml(&cell.content)
+                        ));
                     }
                     html.push_str("</tr></thead>\n");
                 }
@@ -110,7 +120,10 @@ impl EpubEncoder {
                 for row in &table.rows {
                     html.push_str("<tr>");
                     for cell in row {
-                        html.push_str(&format!("<td>{}</td>", self.inlines_to_xhtml(&cell.content)));
+                        html.push_str(&format!(
+                            "<td>{}</td>",
+                            self.inlines_to_xhtml(&cell.content)
+                        ));
                     }
                     html.push_str("</tr>");
                 }
@@ -213,7 +226,8 @@ impl super::Encoder for EpubEncoder {
 
         let mut builder = EpubBuilder::new(ZipLibrary::new().map_err(|e| {
             ConversionError::EncodingFailed(format!("Failed to create zip: {}", e))
-        })?).map_err(|e| {
+        })?)
+        .map_err(|e| {
             ConversionError::EncodingFailed(format!("Failed to create EPUB builder: {}", e))
         })?;
 
@@ -234,12 +248,15 @@ impl super::Encoder for EpubEncoder {
 
         // Add resources (images, fonts, etc.)
         for (key, resource) in book.resources.iter() {
-            let data = resource.data.as_bytes()
-                .map_err(|e| ConversionError::EncodingFailed(format!("Failed to read resource: {}", e)))?;
+            let data = resource.data.as_bytes().map_err(|e| {
+                ConversionError::EncodingFailed(format!("Failed to read resource: {}", e))
+            })?;
             let mime = &resource.mime_type;
 
             // Determine filename from key or original filename
-            let filename = resource.original_filename.as_ref()
+            let filename = resource
+                .original_filename
+                .as_ref()
                 .map(|f| format!("images/{}", f))
                 .unwrap_or_else(|| format!("images/{}", key));
 

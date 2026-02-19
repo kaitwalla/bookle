@@ -286,7 +286,8 @@ fn test_info_json_output() {
     let stdout = String::from_utf8(output.get_output().stdout.clone()).unwrap();
 
     // Verify it's valid JSON
-    let json: serde_json::Value = serde_json::from_str(&stdout).expect("Output should be valid JSON");
+    let json: serde_json::Value =
+        serde_json::from_str(&stdout).expect("Output should be valid JSON");
     assert!(json["title"].is_string(), "Should have title field");
 }
 
@@ -329,16 +330,8 @@ fn test_batch_with_files() {
     fs::create_dir_all(&input_dir).unwrap();
 
     // Create test files
-    fs::write(
-        input_dir.join("book1.md"),
-        "# Book 1\n\nContent of book 1.",
-    )
-    .unwrap();
-    fs::write(
-        input_dir.join("book2.md"),
-        "# Book 2\n\nContent of book 2.",
-    )
-    .unwrap();
+    fs::write(input_dir.join("book1.md"), "# Book 1\n\nContent of book 1.").unwrap();
+    fs::write(input_dir.join("book2.md"), "# Book 2\n\nContent of book 2.").unwrap();
 
     let mut cmd = Command::cargo_bin("bookle-cli").unwrap();
     cmd.args([

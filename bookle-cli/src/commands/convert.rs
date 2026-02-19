@@ -39,8 +39,8 @@ pub fn convert(input: &str, output: &str, format: &str) -> Result<()> {
 
     // Read input file
     pb.set_message("Reading input file...");
-    let file = File::open(input_path)
-        .with_context(|| format!("Failed to open input file: {}", input))?;
+    let file =
+        File::open(input_path).with_context(|| format!("Failed to open input file: {}", input))?;
     let mut reader = BufReader::new(file);
 
     // Decode

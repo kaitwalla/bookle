@@ -212,8 +212,8 @@ async fn import_book(path: String, state: State<'_, AppState>) -> Result<BookSum
         .and_then(|e| e.to_str())
         .ok_or_else(|| "Could not determine file extension".to_string())?;
 
-    let decoder = decoder_for_extension(ext)
-        .ok_or_else(|| format!("Unsupported format: {}", ext))?;
+    let decoder =
+        decoder_for_extension(ext).ok_or_else(|| format!("Unsupported format: {}", ext))?;
 
     let file = File::open(path).map_err(|e| e.to_string())?;
     let mut reader = BufReader::new(file);
@@ -360,12 +360,9 @@ fn create_menu(app: &tauri::AppHandle) -> Result<tauri::menu::Menu<tauri::Wry>, 
         .build()?;
 
     // Help menu
-    let about_item = MenuItemBuilder::with_id("about", "About Bookle")
-        .build(app)?;
+    let about_item = MenuItemBuilder::with_id("about", "About Bookle").build(app)?;
 
-    let help_menu = SubmenuBuilder::new(app, "Help")
-        .item(&about_item)
-        .build()?;
+    let help_menu = SubmenuBuilder::new(app, "Help").item(&about_item).build()?;
 
     let menu = MenuBuilder::new(app)
         .item(&file_menu)

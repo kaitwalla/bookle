@@ -37,7 +37,8 @@ impl KepubDecoder {
                 .compression_method(zip::CompressionMethod::Deflated);
 
             for i in 0..archive.len() {
-                let mut file = archive.by_index(i)
+                let mut file = archive
+                    .by_index(i)
                     .map_err(|e| ParseError::InvalidEpub(e.to_string()))?;
 
                 let name = file.name().to_string();
@@ -48,7 +49,10 @@ impl KepubDecoder {
                     .map_err(|e| ParseError::InvalidEpub(e.to_string()))?;
 
                 // Process HTML/XHTML files to strip Kobo spans
-                let processed = if name.ends_with(".xhtml") || name.ends_with(".html") || name.ends_with(".htm") {
+                let processed = if name.ends_with(".xhtml")
+                    || name.ends_with(".html")
+                    || name.ends_with(".htm")
+                {
                     let html = String::from_utf8_lossy(&content);
                     let cleaned = self.clean_kobo_markup(&html);
                     cleaned.into_bytes()
@@ -56,13 +60,16 @@ impl KepubDecoder {
                     content
                 };
 
-                writer.start_file(&name, options)
+                writer
+                    .start_file(&name, options)
                     .map_err(|e| ParseError::InvalidEpub(e.to_string()))?;
-                writer.write_all(&processed)
+                writer
+                    .write_all(&processed)
                     .map_err(|e| ParseError::InvalidEpub(e.to_string()))?;
             }
 
-            writer.finish()
+            writer
+                .finish()
                 .map_err(|e| ParseError::InvalidEpub(e.to_string()))?;
         }
 
@@ -95,8 +102,9 @@ impl KepubDecoder {
                     in_tag = false;
 
                     // Check if this is a koboSpan opening tag
-                    if current_tag.contains("koboSpan") ||
-                       (current_tag.contains("id=\"kobo.") && current_tag.starts_with("<span")) {
+                    if current_tag.contains("koboSpan")
+                        || (current_tag.contains("id=\"kobo.") && current_tag.starts_with("<span"))
+                    {
                         // Skip this tag, increment counter for closing span
                         skip_closing_spans += 1;
                     } else if current_tag == "</span>" && skip_closing_spans > 0 {
@@ -125,7 +133,8 @@ impl super::Decoder for KepubDecoder {
     fn decode(&self, reader: &mut dyn Read) -> Result<Book, ParseError> {
         // Read all data
         let mut data = Vec::new();
-        reader.read_to_end(&mut data)
+        reader
+            .read_to_end(&mut data)
             .map_err(|e| ParseError::InvalidEpub(format!("Failed to read KEPUB: {}", e)))?;
 
         // Preprocess to remove Kobo-specific markup
@@ -178,7 +187,8 @@ mod tests {
     fn test_nested_spans() {
         let decoder = KepubDecoder::new();
 
-        let html = r#"<p><span class="koboSpan" id="kobo.1.1"><strong>Bold</strong> text</span></p>"#;
+        let html =
+            r#"<p><span class="koboSpan" id="kobo.1.1"><strong>Bold</strong> text</span></p>"#;
         let result = decoder.remove_kobo_spans_simple(html);
 
         assert!(result.contains("<strong>Bold</strong>"));

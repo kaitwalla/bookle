@@ -148,7 +148,9 @@ impl EpubDecoder {
         let mut blocks = Vec::new();
         for child in node.children() {
             if let Some(el) = child.value().as_element() {
-                if let Some(block) = self.element_to_block(el, &scraper::Html::new_document(), child)? {
+                if let Some(block) =
+                    self.element_to_block(el, &scraper::Html::new_document(), child)?
+                {
                     blocks.push(block);
                 }
             }
@@ -278,17 +280,14 @@ impl EpubDecoder {
     fn extract_metadata(&self, epub: &epub::doc::EpubDoc<std::io::Cursor<Vec<u8>>>) -> Metadata {
         // Helper to get metadata value as string
         // mdata() returns Option<&MetadataItem>, we need to extract .value
-        let get_meta = |key: &str| -> Option<String> {
-            epub.mdata(key).map(|item| item.value.clone())
-        };
+        let get_meta =
+            |key: &str| -> Option<String> { epub.mdata(key).map(|item| item.value.clone()) };
 
         // Get title
-        let title = get_meta("title")
-            .unwrap_or_else(|| "Unknown Title".to_string());
+        let title = get_meta("title").unwrap_or_else(|| "Unknown Title".to_string());
 
         // Get language
-        let language = get_meta("language")
-            .unwrap_or_else(|| "en".to_string());
+        let language = get_meta("language").unwrap_or_else(|| "en".to_string());
 
         // Helper to get all metadata values for a key
         let get_meta_all = |key: &str| -> Vec<String> {
@@ -305,8 +304,7 @@ impl EpubDecoder {
         // Get other metadata
         let description = get_meta("description");
         let publisher = get_meta("publisher");
-        let identifier = get_meta("identifier")
-            .unwrap_or_else(|| uuid::Uuid::new_v4().to_string());
+        let identifier = get_meta("identifier").unwrap_or_else(|| uuid::Uuid::new_v4().to_string());
 
         let subjects = get_meta_all("subject");
         let rights = get_meta("rights");
@@ -361,7 +359,10 @@ impl EpubDecoder {
     fn extract_resources(
         &self,
         epub: &mut epub::doc::EpubDoc<std::io::Cursor<Vec<u8>>>,
-    ) -> (crate::types::ResourceStore, std::collections::HashMap<String, String>) {
+    ) -> (
+        crate::types::ResourceStore,
+        std::collections::HashMap<String, String>,
+    ) {
         use crate::types::{Resource, ResourceStore};
 
         let mut store = ResourceStore::new();
@@ -390,14 +391,22 @@ impl EpubDecoder {
     }
 
     /// Rewrite image references in blocks to use content-addressed keys
-    fn rewrite_image_refs(blocks: &mut [Block], id_to_key: &std::collections::HashMap<String, String>) {
+    fn rewrite_image_refs(
+        blocks: &mut [Block],
+        id_to_key: &std::collections::HashMap<String, String>,
+    ) {
         for block in blocks {
             match block {
                 Block::Image { resource_key, .. } => {
                     // Try to find the key by matching the end of the path
-                    if let Some(new_key) = id_to_key.iter().find(|(id, _)| {
-                        resource_key.ends_with(id.as_str()) || id.ends_with(resource_key.as_str())
-                    }).map(|(_, key)| key.clone()) {
+                    if let Some(new_key) = id_to_key
+                        .iter()
+                        .find(|(id, _)| {
+                            resource_key.ends_with(id.as_str())
+                                || id.ends_with(resource_key.as_str())
+                        })
+                        .map(|(_, key)| key.clone())
+                    {
                         *resource_key = new_key;
                     }
                 }
@@ -429,10 +438,11 @@ impl EpubDecoder {
             .iter()
             .map(|i| match i {
                 Inline::Text(s) => s.clone(),
-                Inline::Bold(children) | Inline::Italic(children) | Inline::Superscript(children)
-                | Inline::Subscript(children) | Inline::Strikethrough(children) => {
-                    Self::inlines_to_plain_text(children)
-                }
+                Inline::Bold(children)
+                | Inline::Italic(children)
+                | Inline::Superscript(children)
+                | Inline::Subscript(children)
+                | Inline::Strikethrough(children) => Self::inlines_to_plain_text(children),
                 Inline::Link { children, .. } => Self::inlines_to_plain_text(children),
                 Inline::Code(s) => s.clone(),
                 Inline::FootnoteRef { id } => format!("[{}]", id),
@@ -474,11 +484,8 @@ impl super::Decoder for EpubDecoder {
         book.resources = resources;
 
         // Build a map of TOC entries by href for chapter title lookup
-        let toc_titles: std::collections::HashMap<String, String> = book
-            .toc
-            .iter()
-            .flat_map(|e| Self::flatten_toc(e))
-            .collect();
+        let toc_titles: std::collections::HashMap<String, String> =
+            book.toc.iter().flat_map(|e| Self::flatten_toc(e)).collect();
 
         // Process spine (reading order)
         let spine = epub.spine.clone();
@@ -505,13 +512,16 @@ impl super::Decoder for EpubDecoder {
                     .map(|(_, title)| title.clone())
                     .unwrap_or_else(|| {
                         // Try to extract title from first header in content
-                        blocks.iter().find_map(|b| {
-                            if let Block::Header { content, .. } = b {
-                                Some(Self::inlines_to_plain_text(content))
-                            } else {
-                                None
-                            }
-                        }).unwrap_or_else(|| item_id.clone())
+                        blocks
+                            .iter()
+                            .find_map(|b| {
+                                if let Block::Header { content, .. } = b {
+                                    Some(Self::inlines_to_plain_text(content))
+                                } else {
+                                    None
+                                }
+                            })
+                            .unwrap_or_else(|| item_id.clone())
                     });
 
                 let chapter = Chapter::new(title)

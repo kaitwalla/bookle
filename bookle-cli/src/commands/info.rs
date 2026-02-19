@@ -34,8 +34,8 @@ pub fn info(input: &str, json: bool) -> Result<()> {
         .with_context(|| format!("No decoder available for .{} files", ext))?;
 
     // Read and decode
-    let file = File::open(input_path)
-        .with_context(|| format!("Failed to open input file: {}", input))?;
+    let file =
+        File::open(input_path).with_context(|| format!("Failed to open input file: {}", input))?;
     let mut reader = BufReader::new(file);
 
     let book = decoder

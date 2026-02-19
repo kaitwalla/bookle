@@ -115,10 +115,7 @@ impl TypstPdfEncoder {
         ));
 
         for author in &book.metadata.creator {
-            typst.push_str(&format!(
-                "  #text(size: 14pt)[{}]\n",
-                escape_typst(author)
-            ));
+            typst.push_str(&format!("  #text(size: 14pt)[{}]\n", escape_typst(author)));
         }
 
         typst.push_str("]\n\n#pagebreak()\n\n");
@@ -151,7 +148,11 @@ impl TypstPdfEncoder {
     /// Convert a single Block to Typst
     fn block_to_typst(&self, block: &Block) -> String {
         match block {
-            Block::Header { level, content, anchor } => {
+            Block::Header {
+                level,
+                content,
+                anchor,
+            } => {
                 let prefix = "=".repeat((*level as usize).min(6));
                 let label = anchor
                     .as_ref()
@@ -175,7 +176,11 @@ impl TypstPdfEncoder {
                 }
                 typst
             }
-            Block::Image { resource_key, caption, .. } => {
+            Block::Image {
+                resource_key,
+                caption,
+                ..
+            } => {
                 let mut typst = format!("#figure(\n  image(\"{}\", width: 80%),\n", resource_key);
                 if let Some(cap) = caption {
                     typst.push_str(&format!("  caption: [{}],\n", escape_typst(cap)));
@@ -191,7 +196,10 @@ impl TypstPdfEncoder {
                     if lang_str.is_empty() {
                         format!("#raw(block: true)[{}]\n", escaped_code)
                     } else {
-                        format!("#raw(block: true, lang: \"{}\")[{}]\n", lang_str, escaped_code)
+                        format!(
+                            "#raw(block: true, lang: \"{}\")[{}]\n",
+                            lang_str, escaped_code
+                        )
                     }
                 } else {
                     format!("```{}\n{}\n```\n", lang_str, code)
@@ -201,13 +209,12 @@ impl TypstPdfEncoder {
                 let content = self.blocks_to_typst(blocks);
                 format!("#quote(block: true)[\n{}\n]\n", content)
             }
-            Block::ThematicBreak => {
-                "#line(length: 100%)\n".to_string()
-            }
+            Block::ThematicBreak => "#line(length: 100%)\n".to_string(),
             Block::Table(table) => {
-                let cols = table.headers.len().max(
-                    table.rows.first().map(|r| r.len()).unwrap_or(0)
-                );
+                let cols = table
+                    .headers
+                    .len()
+                    .max(table.rows.first().map(|r| r.len()).unwrap_or(0));
                 let mut typst = format!("#table(\n  columns: {},\n", cols);
 
                 // Headers
@@ -221,10 +228,7 @@ impl TypstPdfEncoder {
                 // Rows
                 for row in &table.rows {
                     for cell in row {
-                        typst.push_str(&format!(
-                            "  [{}],\n",
-                            self.inlines_to_typst(&cell.content)
-                        ));
+                        typst.push_str(&format!("  [{}],\n", self.inlines_to_typst(&cell.content)));
                     }
                 }
 
@@ -271,7 +275,11 @@ impl TypstPdfEncoder {
             Inline::Link { children, url } => {
                 // Escape quotes in URL
                 let escaped_url = url.replace('"', "\\\"");
-                format!("#link(\"{}\")[{}]", escaped_url, self.inlines_to_typst(children))
+                format!(
+                    "#link(\"{}\")[{}]",
+                    escaped_url,
+                    self.inlines_to_typst(children)
+                )
             }
             Inline::Superscript(children) => {
                 format!("#super[{}]", self.inlines_to_typst(children))
@@ -287,7 +295,11 @@ impl TypstPdfEncoder {
             }
             Inline::Ruby { base, annotation } => {
                 // Typst doesn't have native ruby support, use a workaround
-                format!("{}#super[#text(size: 0.6em)[{}]]", escape_typst(base), escape_typst(annotation))
+                format!(
+                    "{}#super[#text(size: 0.6em)[{}]]",
+                    escape_typst(base),
+                    escape_typst(annotation)
+                )
             }
             Inline::Break => "\\\n".to_string(),
         }

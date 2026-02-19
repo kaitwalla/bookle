@@ -30,10 +30,7 @@ pub enum Block {
     },
 
     /// Code block with optional language
-    CodeBlock {
-        lang: Option<String>,
-        code: String,
-    },
+    CodeBlock { lang: Option<String>, code: String },
 
     /// Block quote
     Blockquote(Vec<Block>),
@@ -45,10 +42,7 @@ pub enum Block {
     Table(TableData),
 
     /// Footnote definition
-    Footnote {
-        id: String,
-        content: Vec<Block>,
-    },
+    Footnote { id: String, content: Vec<Block> },
 }
 
 /// Inline content element
@@ -68,10 +62,7 @@ pub enum Inline {
     Code(String),
 
     /// Hyperlink
-    Link {
-        children: Vec<Inline>,
-        url: String,
-    },
+    Link { children: Vec<Inline>, url: String },
 
     /// Superscript text
     Superscript(Vec<Inline>),
@@ -83,15 +74,10 @@ pub enum Inline {
     Strikethrough(Vec<Inline>),
 
     /// Footnote reference
-    FootnoteRef {
-        id: String,
-    },
+    FootnoteRef { id: String },
 
     /// Ruby annotation (for CJK texts)
-    Ruby {
-        base: String,
-        annotation: String,
-    },
+    Ruby { base: String, annotation: String },
 
     /// Line break
     Break,

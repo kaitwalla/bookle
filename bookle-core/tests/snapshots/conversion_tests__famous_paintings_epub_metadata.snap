@@ -1,0 +1,19 @@
+---
+source: bookle-core/tests/conversion_tests.rs
+expression: snapshot
+---
+{
+  "title": "Famous Paintings",
+  "creator": [
+    "Infogrid Pacific"
+  ],
+  "subject": [
+    "Fixed Layout Demonstration"
+  ],
+  "description": null,
+  "publisher": "Infogrid Pacific",
+  "language": "en",
+  "cover_resource_key": "cover",
+  "reading_direction": "LeftToRight",
+  "rights": null
+}

@@ -30,8 +30,9 @@ impl PdfDecoder {
     /// Extract text from PDF and convert to blocks
     fn extract_text_to_blocks(&self, data: &[u8]) -> Result<Vec<Block>, ParseError> {
         // Extract text from PDF
-        let text = pdf_extract::extract_text_from_mem(data)
-            .map_err(|e| ParseError::MalformedContent(format!("Failed to extract PDF text: {}", e)))?;
+        let text = pdf_extract::extract_text_from_mem(data).map_err(|e| {
+            ParseError::MalformedContent(format!("Failed to extract PDF text: {}", e))
+        })?;
 
         // Split into paragraphs and convert to blocks
         let mut blocks = Vec::new();
@@ -91,23 +92,42 @@ impl PdfDecoder {
         // Check various heading patterns
 
         // Pattern 1: Short text (< 100 chars) that doesn't end with common sentence enders
-        let is_short = text.len() < 100 && !text.ends_with('.') && !text.ends_with('?') && !text.ends_with('!');
+        let is_short = text.len() < 100
+            && !text.ends_with('.')
+            && !text.ends_with('?')
+            && !text.ends_with('!');
 
         // Pattern 2: Numbered chapter patterns
         let numbered_patterns = [
-            "chapter", "part", "section", "book", "volume",
-            "prologue", "epilogue", "introduction", "conclusion",
-            "preface", "appendix", "foreword", "afterword",
+            "chapter",
+            "part",
+            "section",
+            "book",
+            "volume",
+            "prologue",
+            "epilogue",
+            "introduction",
+            "conclusion",
+            "preface",
+            "appendix",
+            "foreword",
+            "afterword",
         ];
         let text_lower = text.to_lowercase();
         let has_chapter_keyword = numbered_patterns.iter().any(|p| text_lower.starts_with(p));
 
         // Pattern 3: All uppercase (but not too long)
-        let is_all_caps = text.len() < 60 && text.chars().filter(|c| c.is_alphabetic()).all(|c| c.is_uppercase());
+        let is_all_caps = text.len() < 60
+            && text
+                .chars()
+                .filter(|c| c.is_alphabetic())
+                .all(|c| c.is_uppercase());
 
         // Pattern 4: Roman numeral or number at start
         let starts_with_number = text.chars().next().map(|c| c.is_numeric()).unwrap_or(false);
-        let roman_numerals = ["I.", "II.", "III.", "IV.", "V.", "VI.", "VII.", "VIII.", "IX.", "X."];
+        let roman_numerals = [
+            "I.", "II.", "III.", "IV.", "V.", "VI.", "VII.", "VIII.", "IX.", "X.",
+        ];
         let starts_with_roman = roman_numerals.iter().any(|r| text.starts_with(r));
 
         is_short && (has_chapter_keyword || is_all_caps || starts_with_number || starts_with_roman)
@@ -123,8 +143,10 @@ impl PdfDecoder {
         }
 
         // Level 2: Chapters
-        if text_lower.starts_with("chapter ") || text_lower.starts_with("prologue") ||
-           text_lower.starts_with("epilogue") {
+        if text_lower.starts_with("chapter ")
+            || text_lower.starts_with("prologue")
+            || text_lower.starts_with("epilogue")
+        {
             return 2;
         }
 
@@ -150,7 +172,9 @@ impl PdfDecoder {
             if is_chapter_heading {
                 // Save previous chapter if exists
                 if !current_blocks.is_empty() || current_title.is_some() {
-                    let title = current_title.take().unwrap_or_else(|| "Untitled".to_string());
+                    let title = current_title
+                        .take()
+                        .unwrap_or_else(|| "Untitled".to_string());
                     chapters.push(Chapter::new(title).with_content(current_blocks));
                     current_blocks = Vec::new();
                 }
@@ -245,7 +269,9 @@ fn inlines_to_text(inlines: &[Inline]) -> String {
             }
             Inline::Link { children, .. } => inlines_to_text(children),
             Inline::Code(s) => s.clone(),
-            Inline::Superscript(children) | Inline::Subscript(children) => inlines_to_text(children),
+            Inline::Superscript(children) | Inline::Subscript(children) => {
+                inlines_to_text(children)
+            }
             Inline::FootnoteRef { id } => format!("[{}]", id),
             Inline::Ruby { base, .. } => base.clone(),
             Inline::Break => " ".to_string(),
@@ -267,7 +293,9 @@ mod tests {
         assert!(decoder.is_likely_heading("Prologue"));
 
         // Regular text should not be detected as heading
-        assert!(!decoder.is_likely_heading("This is a regular paragraph that continues for a while and discusses various topics."));
+        assert!(!decoder.is_likely_heading(
+            "This is a regular paragraph that continues for a while and discusses various topics."
+        ));
     }
 
     #[test]
