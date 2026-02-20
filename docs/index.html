@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bookle - Modern Ebook Management</title>
-  <meta name="description" content="Bookle is a modern ebook management system with format conversion capabilities. Convert between EPUB, PDF, MOBI, and Markdown.">
+  <title>Bookle - Ebook Format Converter</title>
+  <meta name="description" content="Bookle is a command-line ebook format converter. Convert between EPUB, PDF, MOBI, Markdown, and Typst.">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
   <style>
@@ -335,7 +335,7 @@
     <div class="container">
       <img src="logo.png" alt="Bookle Logo" class="hero-logo">
       <h1>Bookle</h1>
-      <p class="hero-tagline">Modern ebook management with powerful format conversion</p>
+      <p class="hero-tagline">A fast command-line ebook format converter</p>
       <div class="cta-buttons">
         <a href="https://github.com/kaitwalla/bookle" class="btn btn-primary">
           <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
@@ -352,34 +352,34 @@
       <h2 class="section-title">Features</h2>
       <div class="features-grid">
         <div class="feature-card">
-          <div class="feature-icon">📚</div>
-          <h3>Library Management</h3>
-          <p>Organize your entire ebook collection with metadata, search, and automatic categorization.</p>
-        </div>
-        <div class="feature-card">
           <div class="feature-icon">🔄</div>
           <h3>Format Conversion</h3>
-          <p>Convert between EPUB, PDF, MOBI, and Markdown using a lossless intermediate representation.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">🖥️</div>
-          <h3>Cross-Platform</h3>
-          <p>Desktop app (Windows, macOS, Linux), web interface, and CLI for every workflow.</p>
+          <p>Convert between EPUB, PDF, MOBI, Markdown, and Typst using a lossless intermediate representation.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon">⚡</div>
           <h3>Blazing Fast</h3>
-          <p>Built with Rust for maximum performance and reliability. Process hundreds of books in seconds.</p>
+          <p>Built with Rust for maximum performance. Process hundreds of books in seconds.</p>
         </div>
         <div class="feature-card">
-          <div class="feature-icon">🔌</div>
-          <h3>REST API</h3>
-          <p>Full-featured API server for integration with your existing tools and workflows.</p>
+          <div class="feature-icon">📦</div>
+          <h3>Batch Processing</h3>
+          <p>Convert entire directories of ebooks with parallel processing and flexible output options.</p>
         </div>
         <div class="feature-card">
-          <div class="feature-icon">📡</div>
-          <h3>Real-time Sync</h3>
-          <p>Server-sent events keep all connected clients in sync with instant updates.</p>
+          <div class="feature-icon">🖥️</div>
+          <h3>Cross-Platform</h3>
+          <p>Pre-built binaries for Linux, macOS, and Windows. Install and start converting immediately.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📋</div>
+          <h3>Book Info & Validation</h3>
+          <p>Extract metadata and validate ebook structure with detailed JSON output.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🎯</div>
+          <h3>Semantic IR</h3>
+          <p>Preserves document structure through an intermediate representation for high-fidelity conversion.</p>
         </div>
       </div>
     </div>
@@ -447,20 +447,8 @@
           <p>Core library with decoders, encoders, and IR types</p>
         </div>
         <div class="arch-card">
-          <h4>bookle-server</h4>
-          <p>REST API server built with Axum</p>
-        </div>
-        <div class="arch-card">
           <h4>bookle-cli</h4>
-          <p>Command-line interface for batch processing</p>
-        </div>
-        <div class="arch-card">
-          <h4>bookle-desktop</h4>
-          <p>Cross-platform desktop app (Tauri)</p>
-        </div>
-        <div class="arch-card">
-          <h4>frontend-web</h4>
-          <p>React-based web interface</p>
+          <p>Command-line interface for conversion and batch processing</p>
         </div>
       </div>
     </div>
@@ -471,14 +459,13 @@
     <div class="container">
       <h2 class="section-title">Quick Start</h2>
       <div class="code-block">
-        <span class="comment"># Clone the repository</span><br>
+        <span class="comment"># Install from source</span><br>
         <span class="command">git clone https://github.com/kaitwalla/bookle.git</span><br>
-        <span class="command">cd bookle</span><br><br>
-        <span class="comment"># Build and run</span><br>
-        <span class="command">cargo build --release</span><br>
-        <span class="command">cargo run -p bookle-server</span><br><br>
+        <span class="command">cd bookle && cargo install --path bookle-cli</span><br><br>
         <span class="comment"># Convert a book</span><br>
-        <span class="command">bookle convert input.epub -o output.typ</span>
+        <span class="command">bookle convert input.epub -o output.typ</span><br><br>
+        <span class="comment"># Batch convert a directory</span><br>
+        <span class="command">bookle batch ./ebooks -o ./converted -f epub</span>
       </div>
     </div>
   </section>
@@ -486,7 +473,7 @@
   <!-- CTA Section -->
   <section class="cta-section">
     <div class="container">
-      <h2>Ready to manage your ebooks?</h2>
+      <h2>Ready to convert your ebooks?</h2>
       <p>Get started with Bookle today - it's free and open source.</p>
       <a href="https://github.com/kaitwalla/bookle" class="btn">
         <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
